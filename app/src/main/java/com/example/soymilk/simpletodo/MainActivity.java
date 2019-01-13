@@ -44,10 +44,9 @@ import java.util.ArrayList;
     Could have used .set method from ArrayList class instead to replace item at a specified position
 
     7a.
-    Cool beans
     Passing data from Activity A to B using .putExtra and .getExtra from the Intent class
 
-    7b.
+    7b. Returning Data Result to Parent Activity
     And using startActivityForResult, setResult, a public static final int REQUEST_CODE
     and Overriding onActivityResult to get data from an Activity (opened via an Intent) when it closes
 
