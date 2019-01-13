@@ -45,7 +45,7 @@ import java.util.ArrayList;
    Questions:
 
     1.
-   Why is OnItemClickListener a boolean?
+   Why is OnLongItemClickListener a boolean?
 
 */
 
