@@ -1,5 +1,6 @@
 package com.example.soymilk.simpletodo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,12 @@ import java.util.ArrayList;
     4.
     data persistence using file systems
 
+    5.
+    .this refers to the instance of the class while .class refers to the type
+
+    6.
+    Could have used .set method from ArrayList class instead to replace item at a speicified position
+
    Questions:
 
     1.
@@ -49,13 +56,21 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button addButton;
     ListView listView;
-    ArrayList<String> listOfItems;
+    static ArrayList<String> listOfItems;
     ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        writeItems();
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //did not show when coming back from EditItemActivity
         editText = (EditText) findViewById(R.id.editText);
         addButton = (Button) findViewById(R.id.btnAddItem);
         listView = (ListView) findViewById(R.id.lsitems);
@@ -66,6 +81,19 @@ public class MainActivity extends AppCompatActivity {
         //listOfItems.add("Sky");
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listOfItems);
         listView.setAdapter(adapter);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent openEditItem = new Intent(MainActivity.this, EditItemActivity.class);
+                openEditItem.putExtra("index", position);
+                startActivity(openEditItem);
+            }
+        });
+
+
+
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -79,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addMethod(View view){
-        Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Item added", Toast.LENGTH_SHORT).show();
         adapter.add(editText.getText().toString());
         writeItems();
         editText.setText("");
