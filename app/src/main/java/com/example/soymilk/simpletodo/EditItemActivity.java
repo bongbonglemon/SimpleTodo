@@ -23,8 +23,7 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void saveMethod(View view){
         newItem = addNewItem.getText().toString();
-        MainActivity.listOfItems.remove(index);
-        MainActivity.listOfItems.add(index, newItem);
+        MainActivity.listOfItems.set(index, newItem);
         Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
         finish();
     }
