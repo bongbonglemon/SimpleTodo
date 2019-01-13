@@ -1,6 +1,7 @@
 package com.example.soymilk.simpletodo;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +41,15 @@ import java.util.ArrayList;
     .this refers to the instance of the class while .class refers to the type
 
     6.
-    Could have used .set method from ArrayList class instead to replace item at a speicified position
+    Could have used .set method from ArrayList class instead to replace item at a specified position
+
+    7a.
+    Cool beans
+    Passing data from Activity A to B using .putExtra and .getExtra from the Intent class
+
+    7b.
+    And using startActivityForResult, setResult, a public static final int REQUEST_CODE
+    and Overriding onActivityResult to get data from an Activity (opened via an Intent) when it closes
 
    Questions:
 
@@ -59,12 +68,26 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> listOfItems;
     ArrayAdapter<String> adapter;
 
-    @Override
+    // numeric code to define the edit activity
+
+    public static final int EDIT_REQUEST_CODE = 20;
+
+    // keys used for passing data between activities
+
+    public final static String ITEM_TEXT = "itemText";
+    public final static String ITEM_POSITION = "itemPosition";
+
+    /* @Override
     protected void onResume() {
         super.onResume();
         writeItems();
         adapter.notifyDataSetChanged();
-    }
+    } */
+
+    //handle results from edit activity
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +109,19 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //create new activity
+                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
+                //pass data to new activity
+                intent.putExtra(ITEM_TEXT, listOfItems.get(position));
+                intent.putExtra(ITEM_POSITION, position);
+                //display new activity
+                startActivityForResult(intent, EDIT_REQUEST_CODE); //*NEW*
+
+                /* old code
+
                 Intent openEditItem = new Intent(MainActivity.this, EditItemActivity.class);
                 openEditItem.putExtra("index", position);
-                startActivity(openEditItem);
+                startActivity(openEditItem); */
             }
         });
 
@@ -104,6 +137,21 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { //not being called
+        super.onActivityResult(requestCode, resultCode, data);
+        //if the edit activity completed ok
+        if(resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE){
+            String updatedItem = data.getStringExtra(ITEM_TEXT);
+            int position = data.getIntExtra(ITEM_POSITION, 0);
+            //update model
+            listOfItems.set(position, updatedItem);
+            adapter.notifyDataSetChanged();
+            writeItems();
+            Toast.makeText(getApplicationContext(), "UPDATED", Toast.LENGTH_LONG).show();
+
+        }
     }
 
     public void addMethod(View view){
