@@ -54,6 +54,8 @@ import java.util.ArrayList;
 
     1.
    Why is OnLongItemClickListener a boolean?
+   当一个view同时含有onitemclick和onitemlongclick的时候，如果onitemlongclick返回false,
+   会同时出发这个view的onitemclick方法。如果onitemlongclick返回true就不会调用到onitemclick了。
 
 */
 
